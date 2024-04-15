@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AuthController } from './auth.controller';
+import { AuthController } from './controller';
 
 export class AuthRoutes {
 
@@ -7,8 +7,7 @@ export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
     
-    // Definir las rutas
-    // router.use('/api/todos', /*TodoRoutes.routes */ );
+    router.get('/',);
 
     return router;
   }

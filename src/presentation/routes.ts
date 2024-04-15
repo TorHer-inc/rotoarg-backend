@@ -1,18 +1,13 @@
 import { Router } from 'express';
-import { ProductsRoutes } from './products/routes';
+import { ProductsRoutes } from './product/routes';
 import { AuthRoutes } from './auth/routes';
 
 export class AppRoutes {
-
-
   static get routes(): Router {
     const router = Router();
     
-    // Definir las rutas
-    // router.use('/api/todos', /*TodoRoutes.routes */ );
-
-    router.use('/auth',AuthRoutes.routes);
-    router.use('/products',ProductsRoutes.routes);
+    router.use('/auth', AuthRoutes.routes);
+    router.use('/products', ProductsRoutes.routes);
 
     return router;
   }
@@ -23,6 +18,7 @@ export class AppRoutes {
   // * price
   // * ?description
   // * ?img
+  
 //! Usuarios
   // * name
   // * email
