@@ -12,17 +12,3 @@ export class AppRoutes {
     return router;
   }
 }
-
-//!  lista de productos
-  // * nameProduct
-  // * price
-  // * ?description
-  // * ?img
-  
-//! Usuarios
-  // * name
-  // * email
-  // * password
-  // * img
-  // * role
-  // * status -> true -> activo -> false -> inactivo

@@ -8,23 +8,24 @@ const productSchema = new mongoose.Schema({
   },
   
   description: {
-    type : String,
+    type    : String,
+    default : null
   },
 
   price: {
-    type    : Number,
-    default : 0,
+    type     : Number,
+    required : [true, 'Price is required'],
   },
 
-  percentage: {
-    type    : Number,
-    default : 0,
-  },
+  // percentage: {
+  //   type    : Number,
+  //   default : 0,
+  // },
 
-  total_price: {
-    type    : Number,
-    default : 0,
-  }
+  // total_price: {
+  //   type    : Number,
+  //   default : 0,
+  // }
 })
 
 export const ProductModel = mongoose.model('Product', productSchema)

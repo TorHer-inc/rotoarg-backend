@@ -9,7 +9,11 @@ export class ProductsRoutes {
     const productService = new ProductService();
     const controller = new ProductsController( productService );
 
+    router.post('/', controller.createProduct);
     router.get('/', controller.getProducts);
+    // router.get('/:id', controller.getProducts);
+    // router.delete('/:id', controller.getProducts);
+    // router.put('/:id', controller.getProducts);
 
     return router;
   }
