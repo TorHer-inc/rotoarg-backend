@@ -4,8 +4,6 @@ import { CreateProductDto, CustomError } from "../../domain";
 
 export class ProductsController {
 
-  // DI
-
   constructor(
     private readonly productService: ProductService,
   ) {}
@@ -18,7 +16,7 @@ export class ProductsController {
     return res.status(500).json({ error: 'Internal server error' })
   }
 
-  createProduct = async ( req: Request, res: Response ) => {
+  createProduct = ( req: Request, res: Response ) => {
     const [ error, createProductDto ] = CreateProductDto.create( req.body );
     if ( error ) return res.status(400).json({ error });
 
@@ -27,9 +25,17 @@ export class ProductsController {
       .catch( error => this.handleError( error, res ) ); 
   };
 
-  getProducts = async ( req: Request, res: Response ) => {
+  getProducts = ( req: Request, res: Response ) => {
     this.productService.getProducts()
       .then( products => res.json( products ) )
+      .catch( error => this.handleError( error, res ) ); 
+  };
+
+  deleteProduct = ( req: Request, res: Response ) => {
+    const productId = req.params.id;
+
+    this.productService.deleteProduct( productId )
+      .then(( deletedProduct ) => res.status(200).json({ message: 'Product deleted successfully', deletedProduct }) )
       .catch( error => this.handleError( error, res ) ); 
   };
 }

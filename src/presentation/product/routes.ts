@@ -12,7 +12,7 @@ export class ProductsRoutes {
     router.post('/', controller.createProduct);
     router.get('/', controller.getProducts);
     // router.get('/:id', controller.getProducts);
-    // router.delete('/:id', controller.getProducts);
+    router.delete('/:id', controller.deleteProduct);
     // router.put('/:id', controller.getProducts);
 
     return router;

@@ -7,9 +7,19 @@ const productSchema = new mongoose.Schema({
     unique   : true,
   },
   
-  description: {
-    type    : String,
-    default : null
+  capacity: {
+    type     : Number,
+    required : [true, 'Capacity is required'],
+  },
+
+  height: {
+    type     : Number,
+    required : [true, 'Height is required'],
+  },
+
+  diameter: {
+    type     : Number,
+    required : [true, 'Diameter is required'],
   },
 
   price: {
