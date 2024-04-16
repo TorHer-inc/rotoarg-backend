@@ -1,6 +1,15 @@
 import { ProductModel } from "../../data";
 import { CreateProductDto, CustomError } from "../../domain";
 
+interface Product {
+  id: string;
+  name: string;
+  capacity: number;
+  height: number;
+  diameter: number;
+  price: number;
+}
+
 export class ProductService {
   constructor(
 
@@ -18,12 +27,15 @@ export class ProductService {
       await product.save();
 
       return {
-        id       : product.id,
-        name     : product.name,
-        capacity : product.capacity,
-        height   : product.height,
-        diameter : product.diameter,
-        price    : product.price,
+        message: 'Product created successfully',
+        createdProduct: {
+          id       : product.id,
+          name     : product.name,
+          capacity : product.capacity,
+          height   : product.height,
+          diameter : product.diameter,
+          price    : product.price,
+        }
       }
     } catch (error) {
       throw CustomError.internalServer(`${ error }`);
@@ -34,34 +46,36 @@ export class ProductService {
     try {
       const products = await ProductModel.find()
 
-      // return {
-      //   products: products.map( product => ({
-      //     id: product.id,
-      //     name: product.name,
-      //     price: product.price,
-      //     description: product.description,
-      //   }))
-      // }
-
-      return products.map(product => ({
-        id       : product.id,
-        name     : product.name,
-        price    : product.price,
-        capacity : product.capacity,
-        height   : product.height,
-        diameter : product.diameter,
-      }));
+      return {
+        products: products.map( product => ({
+          id       : product.id,
+          name     : product.name,
+          capacity : product.capacity,
+          height   : product.height,
+          diameter : product.diameter,
+          price    : product.price,
+        }))
+      }
     } catch (error) {
       throw CustomError.internalServer('Internal Server Error');
     }
   }
-
-  async deleteProduct( productId: string ) {
+  
+  async deleteProduct(productId: string): Promise<{ message: string, deletedProduct: Product }> {
     try {
       const deletedProduct = await ProductModel.findByIdAndDelete(productId);
       if (!deletedProduct) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
-      
-      return deletedProduct;
+  
+      const formattedDeletedProduct: Product = {
+        id       : deletedProduct._id.toString(),
+        name     : deletedProduct.name,
+        capacity : deletedProduct.capacity,
+        height   : deletedProduct.height,
+        diameter : deletedProduct.diameter,
+        price    : deletedProduct.price,
+      };
+  
+      return { message: 'Product deleted successfully', deletedProduct: formattedDeletedProduct };
     } catch (error) {
       throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
     }

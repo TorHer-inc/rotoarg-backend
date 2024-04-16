@@ -26,16 +26,6 @@ const productSchema = new mongoose.Schema({
     type     : Number,
     required : [true, 'Price is required'],
   },
-
-  // percentage: {
-  //   type    : Number,
-  //   default : 0,
-  // },
-
-  // total_price: {
-  //   type    : Number,
-  //   default : 0,
-  // }
 })
 
 export const ProductModel = mongoose.model('Product', productSchema)

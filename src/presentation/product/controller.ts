@@ -35,7 +35,16 @@ export class ProductsController {
     const productId = req.params.id;
 
     this.productService.deleteProduct( productId )
-      .then(( deletedProduct ) => res.status(200).json({ message: 'Product deleted successfully', deletedProduct }) )
+      .then(( deletedProduct ) => res.status(200).json( deletedProduct ) )
       .catch( error => this.handleError( error, res ) ); 
   };
+  
+  // deleteProduct = ( req: Request, res: Response ) => {
+  //   const productId = req.params.id;
+
+  //   this.productService.deleteProduct( productId )
+  //     .then(( deletedProduct ) => res.status(200).json({ message: 'Product deleted successfully', deletedProduct }) )
+  //     .catch( error => this.handleError( error, res ) ); 
+  // };
+
 }
