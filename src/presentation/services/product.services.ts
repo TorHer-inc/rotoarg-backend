@@ -17,8 +17,17 @@ export class ProductService {
   ) {}
 
   async createProduct( createProductDto: CreateProductDto ) {
-    const productExist = await ProductModel.findOne({ name: createProductDto.name });
-    if ( productExist ) throw CustomError.badRequest( 'Product already exists' );
+    const productExist = await ProductModel.findOne({
+      name: createProductDto.name,
+      capacity: createProductDto.capacity,
+      height: createProductDto.height,
+      diameter: createProductDto.diameter,
+      price: createProductDto.price
+    });
+
+    if (productExist) {
+      throw CustomError.badRequest('A product with exactly the same characteristics already exists.');
+    }
 
     try {
       const product = new ProductModel({
@@ -69,12 +78,13 @@ export class ProductService {
       
       return {
         message: `Update product with ${productId}`,
-        product:productUpdate};
+        product:productUpdate
+      };
     } catch (error) {
       throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
     }
   }
-  
+
   async deleteProduct(productId: string): Promise<{ message: string, deletedProduct: Product }> {
     try {
       const deletedProduct = await ProductModel.findByIdAndDelete(productId);

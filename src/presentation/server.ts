@@ -27,6 +27,14 @@ export class Server {
     this.app.use( express.json() ); // raw
     this.app.use( express.urlencoded({ extended: true }) ); // x-www-form-urlencoded
 
+    // Configuración de CORS
+    this.app.use((req, res, next) => {
+      res.setHeader('Access-Control-Allow-Origin', '*'); // Permite solicitudes desde cualquier origen
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Define los métodos HTTP permitidos
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Define los encabezados permitidos
+      next();
+    });
+
     //* Public Folder
     this.app.use( express.static( this.publicPath ) );
 
