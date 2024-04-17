@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { ProductModel } from "../../data";
 import { CreateProductDto, CustomError } from "../../domain";
 import { UpdateProductDto } from "../../domain/dtos/product/update-product.dto";
@@ -71,14 +72,90 @@ export class ProductService {
     }
   }
 
-  async updateProduct( productId: string, updateProductDto: UpdateProductDto ) {
-    try {
-      const productUpdate = await ProductModel.findByIdAndUpdate(productId, updateProductDto);
-      if (!productUpdate) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+  // async updateProduct( productId: string, updateProductDto: UpdateProductDto ) {
+  //   try {
+  //     const productUpdate = await ProductModel.findByIdAndUpdate(productId, updateProductDto);
+  //     if (!productUpdate) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
       
+  //     return {
+  //       message: `Update product with ${productId}`,
+  //       updatedProduct: productUpdate
+  //     };
+  //   } catch (error) {
+  //     throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
+  //   }
+  // }
+
+
+  // async updateProduct(productId: string, updateProductDto: UpdateProductDto) {
+  //   try {
+  //     const { id, ...updateData } = updateProductDto.values;
+      
+  //     const validId = mongoose.Types.ObjectId.isValid(productId);
+      
+  //     if (!validId) {
+  //       throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+  //     }
+      
+  //     const productUpdate = await ProductModel.findByIdAndUpdate(productId, updateData, { new: true });
+
+  //     if (!productUpdate) {
+  //       throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+  //     }
+
+  //     const updatedProduct = {
+  //       id: productUpdate._id.toString(),
+  //       name: productUpdate.name,
+  //       capacity: productUpdate.capacity,
+  //       height: productUpdate.height,
+  //       diameter: productUpdate.diameter,
+  //       price: productUpdate.price,
+  //     };
+      
+  //     return {
+  //       message: `Product updated successfully`,
+  //       updatedProduct: updatedProduct,
+  //     };
+  //   } catch (error) {
+  //     throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
+  //   }
+  // }
+
+
+  async updateProduct(productId: string, updateProductDto: UpdateProductDto) {
+    try {
+      const { id, ...updateData } = updateProductDto.values;
+  
+      const validId = mongoose.Types.ObjectId.isValid(productId);
+  
+      if (!validId) {
+        throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+      }
+  
+      const product = await ProductModel.findById(productId);
+  
+      if (!product) {
+        throw CustomError.notFound(`Product not found`);
+      }
+  
+      // Aplicar las actualizaciones al producto encontrado
+      Object.assign(product, updateData);
+  
+      // Guardar el producto actualizado
+      await product.save();
+  
+      const updatedProduct = {
+        id: product._id.toString(),
+        name: product.name,
+        capacity: product.capacity,
+        height: product.height,
+        diameter: product.diameter,
+        price: product.price,
+      };
+  
       return {
-        message: `Update product with ${productId}`,
-        product:productUpdate
+        message: `Product updated successfully`,
+        updatedProduct: updatedProduct,
       };
     } catch (error) {
       throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');

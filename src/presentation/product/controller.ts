@@ -35,11 +35,11 @@ export class ProductsController {
   updateProduct = ( req: Request, res: Response ) => {
     const productId = req.params.id;
 
-    const [ error, updateProductDto ] = UpdateProductDto.update( req.body );
+    const [ error, updateProductDto ] = UpdateProductDto.create( req.body );
     if ( error ) return res.status(400).json({ error });
 
     this.productService.updateProduct( productId, updateProductDto! )
-      .then( product => res.status(201).json( product ) )
+      .then( product => res.status(200).json( product ) )
       .catch( error => this.handleError( error, res ) ); 
   };
 
@@ -50,13 +50,4 @@ export class ProductsController {
       .then(( deletedProduct ) => res.status(200).json( deletedProduct ) )
       .catch( error => this.handleError( error, res ) ); 
   };
-  
-  // deleteProduct = ( req: Request, res: Response ) => {
-  //   const productId = req.params.id;
-
-  //   this.productService.deleteProduct( productId )
-  //     .then(( deletedProduct ) => res.status(200).json({ message: 'Product deleted successfully', deletedProduct }) )
-  //     .catch( error => this.handleError( error, res ) ); 
-  // };
-
 }
