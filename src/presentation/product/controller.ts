@@ -1,6 +1,7 @@
-import { Request, Response } from "express"
+import { Request, Response } from "express";
 import { ProductService } from '../services/product.services';
 import { CreateProductDto, CustomError } from "../../domain";
+import { UpdateProductDto } from "../../domain/dtos/product/update-product.dto";
 
 export class ProductsController {
 
@@ -28,6 +29,17 @@ export class ProductsController {
   getProducts = ( req: Request, res: Response ) => {
     this.productService.getProducts()
       .then( products => res.json( products ) )
+      .catch( error => this.handleError( error, res ) ); 
+  };
+
+  updateProduct = ( req: Request, res: Response ) => {
+    const productId = req.params.id;
+
+    const [ error, updateProductDto ] = UpdateProductDto.update( req.body );
+    if ( error ) return res.status(400).json({ error });
+
+    this.productService.updateProduct( productId, updateProductDto! )
+      .then( product => res.status(201).json( product ) )
       .catch( error => this.handleError( error, res ) ); 
   };
 

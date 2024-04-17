@@ -1,5 +1,6 @@
 import { ProductModel } from "../../data";
 import { CreateProductDto, CustomError } from "../../domain";
+import { UpdateProductDto } from "../../domain/dtos/product/update-product.dto";
 
 interface Product {
   id: string;
@@ -58,6 +59,19 @@ export class ProductService {
       }
     } catch (error) {
       throw CustomError.internalServer('Internal Server Error');
+    }
+  }
+
+  async updateProduct( productId: string, updateProductDto: UpdateProductDto ) {
+    try {
+      const productUpdate = await ProductModel.findByIdAndUpdate(productId, updateProductDto);
+      if (!productUpdate) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+      
+      return {
+        message: `Update product with ${productId}`,
+        product:productUpdate};
+    } catch (error) {
+      throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
     }
   }
   

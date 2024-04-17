@@ -13,7 +13,7 @@ export class ProductsRoutes {
     router.get('/', controller.getProducts);
     // router.get('/:id', controller.getProducts);
     router.delete('/:id', controller.deleteProduct);
-    // router.put('/:id', controller.getProducts);
+    router.put('/:id', controller.updateProduct);
 
     return router;
   }
