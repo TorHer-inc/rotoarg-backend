@@ -36,6 +36,7 @@ export class ProductService {
     }
   }
 
+
   async getProducts() {
     try {
       const products = await ProductModel.find()
@@ -48,20 +49,21 @@ export class ProductService {
     }
   }
 
-  // ---- Codigo Ale ---- // 
-  // async updateProduct( productId: string, updateProductDto: UpdateProductDto ) {
-  //   try {
-  //     const productUpdate = await ProductModel.findByIdAndUpdate(productId, updateProductDto);
-  //     if (!productUpdate) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
-      
-  //     return {
-  //       message: `Update product with ${productId}`,
-  //       updatedProduct: productUpdate
-  //     };
-  //   } catch (error) {
-  //     throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
-  //   }
-  // }
+  // Sirve para saber la fecha de actualizacion de los ultimso producos CREADOS y ACTUALIZADOS
+  async getLastUpdated() {
+    try {
+      const lastProduct = await ProductModel.findOne().sort({ updatedAt: -1 });
+      // Suponiendo que estás usando el campo `updatedAt` para registrar la última actualización de cualquier producto
+      if (lastProduct) {
+        return lastProduct.updatedAt;
+      } else {
+        return null; // Si no hay productos en la base de datos
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   async updateProduct(productId: string, updateProductDto: UpdateProductDto) {
     try {
@@ -88,38 +90,17 @@ export class ProductService {
     }
   }
 
-  // async updateProduct(productId: string, updateProductDto: UpdateProductDto) {
-  //   try {
-  //     const { id, ...updateData } = updateProductDto.values;
-  
-  //     const validId = mongoose.Types.ObjectId.isValid(productId);
-  //     const validId = mongoose.isValidObjectId(productId);
-  
-  //     if (!validId) {
-  //       throw CustomError.notFound(`Product with ID "${productId}" was not found`);
-  //     }
-  
-  //     const product = await ProductModel.findById(productId);
-  
-  //     if (!product) {
-  //       throw CustomError.notFound(`Product not found`);
-  //     }
-  
-  //     // Aplicar las actualizaciones al producto encontrado
-  //     Object.assign(product, updateData);
-  
-  //     // Guardar el producto actualizado
-  //     await product.save();
-  
-  //     return {
-  //       message: `Product updated successfully`,
-  //       updatedProduct: product,
-  //     };
-  //   } catch (error) {
-  //     throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
-  //   }
-  // }
+  // Actualizar la fecha de última actualización cuando se BORRA un producto
+  async updateLastUpdated() {
+    try {
+      const currentDate = new Date();
+      await ProductModel.updateMany({}, { $set: { updatedAt: currentDate } });
+    } catch (error) {
+      throw CustomError.internalServer('Error updating last updated date');
+    }
+  }
 
+  
   async deleteProduct(productId: string) {
     const validId = mongoose.isValidObjectId(productId);
       
@@ -130,6 +111,9 @@ export class ProductService {
     try {
       const deletedProduct = await ProductModel.findByIdAndDelete(productId);
       if (!deletedProduct) throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+
+      // Actualizar la fecha de última actualización
+      await this.updateLastUpdated();
   
       return { 
         message: 'Product deleted successfully', 

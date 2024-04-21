@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ProductService } from '../services/product.services';
 import { CreateProductDto, CustomError } from "../../domain";
 import { UpdateProductDto } from "../../domain/dtos/product/update-product.dto";
+import PDFDocument from 'pdfkit';
 
 export class ProductsController {
 
@@ -49,5 +50,15 @@ export class ProductsController {
     this.productService.deleteProduct( productId )
       .then(( deletedProduct ) => res.status(200).json( deletedProduct ) )
       .catch( error => this.handleError( error, res ) ); 
+  };
+
+  getLastUpdated = async (req: Request, res: Response) => {
+    try {
+      const lastUpdated = await this.productService.getLastUpdated();
+      res.json({ lastUpdated });
+    } catch (error) {
+      console.error("Error al obtener la fecha de la última actualización:", error);
+      res.status(500).json({ error: "Error al obtener la fecha de la última actualización" });
+    }
   };
 }

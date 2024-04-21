@@ -10,6 +10,3 @@ export const envs = {
   MONGO_DB_NAME: get('MONGO_DB_NAME').required().asString(),
 
 }
-
-
-

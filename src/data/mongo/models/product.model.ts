@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+interface IProduct extends Document {
+  name: string;
+  capacity: number;
+  height: number;
+  diameter: number;
+  price: number;
+  updatedAt: Date;
+}
+
 const productSchema = new mongoose.Schema({
   name: {
     type     : String,
@@ -25,7 +34,11 @@ const productSchema = new mongoose.Schema({
     type     : Number,
     required : [true, 'Price is required'],
   },
-})
+},
+{
+  timestamps: true, // Esto agrega las propiedades createdAt y updatedAt automáticamente
+}
+)
 
 productSchema.set('toJSON', {
   transform: function( doc, ret, options ) {
@@ -36,4 +49,4 @@ productSchema.set('toJSON', {
   versionKey: false,
 })
 
-export const ProductModel = mongoose.model('Product', productSchema)
+export const ProductModel = mongoose.model<IProduct>('Product', productSchema);
