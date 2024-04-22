@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ProductService } from '../services/product.services';
 import { CreateProductDto, CustomError } from "../../domain";
 import { UpdateProductDto } from "../../domain/dtos/product/update-product.dto";
-import PDFDocument from 'pdfkit';
+import { buildPDF } from "./utils/pdfkit";
 
 export class ProductsController {
 
@@ -52,13 +52,44 @@ export class ProductsController {
       .catch( error => this.handleError( error, res ) ); 
   };
 
-  getLastUpdated = async (req: Request, res: Response) => {
+  getLastUpdated = (req: Request, res: Response) => {
+    this.productService.getLastUpdated()
+      .then((lastUpdated: Date | null) => res.status(200).json({ lastUpdated }))
+      .catch((error: Error) => this.handleError(error, res));
+  };
+
+  // getLastUpdated = async (req: Request, res: Response) => {
+  //   try {
+  //     const lastUpdated = await this.productService.getLastUpdated();
+  //     res.json({ lastUpdated });
+  //   } catch (error) {
+  //     console.error("Error al obtener la fecha de la última actualización:", error);
+  //     res.status(500).json({ error: "Error al obtener la fecha de la última actualización" });
+  //   }
+  // };
+  
+  generatePdf = async (req: Request, res: Response) => {
     try {
-      const lastUpdated = await this.productService.getLastUpdated();
-      res.json({ lastUpdated });
+      // Obtener los productos del servidor
+      const products = await this.productService.getProducts();
+
+      // Establecer Headers
+      const stream = res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment; filename=lista-productos.pdf",
+      });
+
+      // Llamar al método `buildPDF` pasando los productos
+      buildPDF(
+        products.products,
+        (data: any) => stream.write(data),
+        () => stream.end()
+      );
+
     } catch (error) {
-      console.error("Error al obtener la fecha de la última actualización:", error);
-      res.status(500).json({ error: "Error al obtener la fecha de la última actualización" });
+      // Manejar cualquier error que ocurra durante la obtención de productos o la generación de PDF
+      console.error("Error generating PDF:", error);
+      res.status(500).send("Error generating PDF");
     }
   };
 }

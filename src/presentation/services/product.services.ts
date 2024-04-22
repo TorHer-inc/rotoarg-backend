@@ -49,18 +49,18 @@ export class ProductService {
     }
   }
 
-  // Sirve para saber la fecha de actualizacion de los ultimso producos CREADOS y ACTUALIZADOS
+  // Sirve para saber la fecha de actualizacion de los ultimos productos CREATE y PUT
   async getLastUpdated() {
     try {
       const lastProduct = await ProductModel.findOne().sort({ updatedAt: -1 });
-      // Suponiendo que estás usando el campo `updatedAt` para registrar la última actualización de cualquier producto
+      // Utilizar el campo `updatedAt` para registrar la última actualización de cualquier producto
       if (lastProduct) {
         return lastProduct.updatedAt;
       } else {
         return null; // Si no hay productos en la base de datos
       }
     } catch (error) {
-      throw error;
+      throw CustomError.internalServer('Internal Server Error');
     }
   }
 
@@ -90,7 +90,7 @@ export class ProductService {
     }
   }
 
-  // Actualizar la fecha de última actualización cuando se BORRA un producto
+  // Actualizar la fecha de última actualización cuando se DELETE un producto
   async updateLastUpdated() {
     try {
       const currentDate = new Date();

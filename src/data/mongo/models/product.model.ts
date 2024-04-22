@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
   },
 },
 {
-  timestamps: true, // Esto agrega las propiedades createdAt y updatedAt automáticamente
+  timestamps: true,
 }
 )
 

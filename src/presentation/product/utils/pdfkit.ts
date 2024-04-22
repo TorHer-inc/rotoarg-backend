@@ -9,7 +9,7 @@ export function buildPDF(products: any, dataCallback: any, endCallback: any) {
   // doc.fontSize(25).text("Lista de Productos");
 
   const table = {
-    title: "Lista de Productos",
+    title: "ROTOARG - Lista de Productos",
     headers: [
       { label: "PRODUCTO", align: "left", headerColor: '#123', valign: "center", },
       { label: "CAPACIDAD", align: "center", valign: "center", },
