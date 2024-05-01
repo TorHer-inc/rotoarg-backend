@@ -9,11 +9,11 @@ export class ProductService {
 
   async createProduct( createProductDto: CreateProductDto ) {
     const productExist = await ProductModel.findOne({
-      name: createProductDto.name,
-      capacity: createProductDto.capacity,
-      height: createProductDto.height,
-      diameter: createProductDto.diameter,
-      price: createProductDto.price
+      name     : createProductDto.name,
+      capacity : createProductDto.capacity,
+      height   : createProductDto.height,
+      diameter : createProductDto.diameter,
+      price    : createProductDto.price
     });
 
     if (productExist) {
@@ -35,7 +35,6 @@ export class ProductService {
       throw CustomError.internalServer(`${ error }`);
     }
   }
-
 
   async getProducts() {
     try {
@@ -63,7 +62,6 @@ export class ProductService {
       throw CustomError.internalServer('Internal Server Error');
     }
   }
-
 
   async updateProduct(productId: string, updateProductDto: UpdateProductDto) {
     try {
@@ -99,7 +97,6 @@ export class ProductService {
       throw CustomError.internalServer('Error updating last updated date');
     }
   }
-
   
   async deleteProduct(productId: string) {
     const validId = mongoose.isValidObjectId(productId);

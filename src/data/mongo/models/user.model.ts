@@ -31,11 +31,15 @@ const userSchema = new mongoose.Schema({
     enum    : ['ADMIN_ROLE', 'USER_ROLE'],
     default : ['USER_ROLE'],
   },
+})
 
-  status: {
-    type: Boolean,
-    default: true,
-  }
+userSchema.set('toJSON', {
+  transform: function( doc, ret, options ) {
+    const { _id, ...data } = ret;
+    return { id: _id, ...data };
+  },
+  virtuals: true,
+  versionKey: false,
 })
 
 export const UserModel = mongoose.model('User', userSchema)

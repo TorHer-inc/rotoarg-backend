@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 interface IProduct extends Document {
-  name: string;
-  capacity: number;
-  height: number;
-  diameter: number;
-  price: number;
-  updatedAt: Date;
+  name      : string;
+  capacity  : number;
+  height    : number;
+  diameter  : number;
+  price     : number;
+  updatedAt : Date;
 }
 
 const productSchema = new mongoose.Schema({

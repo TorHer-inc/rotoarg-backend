@@ -1,5 +1,7 @@
 import express, { Router } from 'express';
 import path from 'path';
+import cookieParser from 'cookie-parser';
+import cors from "cors"
 
 interface Options {
   port: number;
@@ -26,22 +28,21 @@ export class Server {
     //* Middlewares
     this.app.use( express.json() ); // raw
     this.app.use( express.urlencoded({ extended: true }) ); // x-www-form-urlencoded
+    this.app.use(cookieParser());
 
     // Configuración de CORS
-    this.app.use((req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin', '*'); // Permite solicitudes desde cualquier origen
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Define los métodos HTTP permitidos
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Define los encabezados permitidos
-      next();
-    });
+    this.app.use(cors({
+      origin         : 'http://localhost:5173',
+      credentials    : true,
+      methods        : 'GET, POST, PUT, DELETE',
+      allowedHeaders : ['Content-Type', 'Authorization'],
+    }));
 
     //* Public Folder
     this.app.use( express.static( this.publicPath ) );
 
     //* Routes
     this.app.use( this.routes );
-
-
     
     //* SPA /^\/(?!api).*/  <== Únicamente si no empieza con la palabra api
     this.app.get('*', (req, res) => {
@@ -49,17 +50,12 @@ export class Server {
       res.sendFile(indexPath);
     });
     
-
-
-    
     this.serverListener = this.app.listen(this.port, () => {
       console.log(`Server running on port ${ this.port }`);
     });
-
   }
 
   public close() {
     this.serverListener?.close();
   }
-
 }

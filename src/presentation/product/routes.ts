@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { ProductService } from '../services/product.services';
 import { ProductsController } from './controller';
-import { buildPDF } from './utils/pdfkit';
+import { ProductService } from '../services';
+import { AuthMiddleware } from '../middleware/auth.middleware';
 
 export class ProductsRoutes {
 
@@ -10,10 +10,9 @@ export class ProductsRoutes {
     const productService = new ProductService();
     const controller = new ProductsController( productService );
 
-    router.post('/', controller.createProduct);
+    router.post('/', [AuthMiddleware.validateJWT], controller.createProduct);
 
     router.get('/', controller.getProducts);
-    // TODO router.get('/:id', controller.getProducts); 
     router.get('/last-updated', controller.getLastUpdated);
     router.get("/lista-productos-pdf", controller.generatePdf );
 
@@ -24,3 +23,4 @@ export class ProductsRoutes {
     return router;
   }
 }
+// TODO router.get('/:id', controller.getProducts); 

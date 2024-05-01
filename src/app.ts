@@ -3,11 +3,9 @@ import { mongo } from './data';
 import { AppRoutes } from './presentation/routes';
 import { Server } from './presentation/server';
 
-
 (async()=> {
   main();
 })();
-
 
 async function main() {
 
