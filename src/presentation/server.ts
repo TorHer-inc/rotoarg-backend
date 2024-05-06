@@ -6,12 +6,16 @@ import passport from 'passport';
 import { Strategy as OAuth2Strategy } from 'passport-google-oauth2';
 import session from 'express-session';
 import { UserModel } from '../data';
+import { envs } from '../config';
 
 interface Options {
   port: number;
   routes: Router;
   public_path?: string;
 }
+
+const GOOGLEOAUTH_CLIENT_ID = envs.GOOGLEOAUTH_CLIENT_ID;
+const GOOGLEOAUTH_CLIENT_SECRET = envs.GOOGLEOAUTH_CLIENT_SECRET;
 
 export class Server {
 
@@ -52,8 +56,8 @@ export class Server {
     this.app.use( passport.session() );
 
     passport.use(new OAuth2Strategy({
-      clientID         : "140589767765-nvms749mlat00o0848v7241j22qj03fc.apps.googleusercontent.com",
-      clientSecret     : "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",
+      clientID         : GOOGLEOAUTH_CLIENT_ID,
+      clientSecret     : GOOGLEOAUTH_CLIENT_SECRET,
       callbackURL      : "http://localhost:3000/auth/google/callback",
       scope            : ["profile", "email"],
     }, 
