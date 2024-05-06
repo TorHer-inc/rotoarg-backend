@@ -40,7 +40,7 @@ export class AuthController {
           secure   : true,
           sameSite : 'none',
           maxAge   : 3600000,
-          // maxAge   : 30000,
+          // maxAge   : 30000,git checkout <nombre de la rama>
         });
         res.json(user);
       })

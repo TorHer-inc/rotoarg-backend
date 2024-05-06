@@ -36,7 +36,7 @@ export class ProductService {
     }
   }
 
-  async getProducts() {
+  async getProducts( ) {
     try {
       const products = await ProductModel.find()
 
@@ -47,6 +47,42 @@ export class ProductService {
       throw CustomError.internalServer('Internal Server Error');
     }
   }
+
+
+  // async getProducts( paginationDto: PaginationDto ) {
+  //   const { page, limit } = paginationDto;
+
+  //   try {
+  //     const [ total, products ] = await Promise.all( [
+  //       ProductModel.countDocuments(),
+  //       ProductModel.find()
+  //         .skip( ( page - 1 ) * limit )
+  //         .limit( limit )
+  //     ]);
+
+  //     const totalPages = Math.ceil(total / limit);
+
+  //     if (page > totalPages) {
+  //       throw CustomError.badRequest('La página solicitada no existe');
+  //     }
+
+  //     return {
+  //       page       : page,
+  //       limit      : limit,
+  //       total      : total,
+  //       totalPages : totalPages,
+  //       next       : (total > page * limit) ? `/products?page=${page + 1}&limit=${limit}` : null,
+  //       prev       : (page - 1 > 0) ? `/products?page=${ (page - 1) }&limit=${ limit }`   : null,
+  //       products   : products.map( product => ({
+  //         id   : product.id,
+  //         name : product.name,
+  //       }))
+  //     }
+  //   } catch (error) {
+  //     throw CustomError.internalServer('Internal Server Error');
+  //   }
+  // }
+
 
   async getProductById(productId: string) {
     try {
