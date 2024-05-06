@@ -32,6 +32,14 @@ export class ProductsController {
       .catch( error => this.handleError( error, res ) ); 
   };
 
+  getProductById = ( req: Request, res: Response ) => {
+    const productId = req.params.id;
+
+    this.productService.getProductById( productId )
+      .then( product => res.json( product ) )
+      .catch( error => this.handleError( error, res ) ); 
+  };
+
   updateProduct = ( req: Request, res: Response ) => {
     const productId = req.params.id;
 

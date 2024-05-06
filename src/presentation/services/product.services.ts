@@ -48,6 +48,28 @@ export class ProductService {
     }
   }
 
+  async getProductById(productId: string) {
+    try {
+      const validId = mongoose.isValidObjectId(productId);
+  
+      if (!validId) {
+        throw CustomError.notFound(`Invalid product ID: ${productId}`);
+      }
+  
+      const product = await ProductModel.findById(productId);
+  
+      if (!product) {
+        throw CustomError.notFound(`Product with ID "${productId}" was not found`);
+      }
+  
+      return {
+        product
+      };
+    } catch (error) {
+      throw error instanceof CustomError ? error : CustomError.internalServer('Internal Server Error');
+    }
+  }
+
   // Sirve para saber la fecha de actualizacion de los ultimos productos CREATE y PUT
   async getLastUpdated() {
     try {

@@ -11,8 +11,9 @@ export class ProductsRoutes {
     const controller = new ProductsController( productService );
 
     router.post('/', [AuthMiddleware.validateJWT], controller.createProduct);
-
+    
     router.get('/', controller.getProducts);
+    router.get('/:id', controller.getProductById);
     router.get('/last-updated', controller.getLastUpdated);
     router.get("/lista-productos-pdf", controller.generatePdf );
 
@@ -23,4 +24,3 @@ export class ProductsRoutes {
     return router;
   }
 }
-// TODO router.get('/:id', controller.getProducts); 

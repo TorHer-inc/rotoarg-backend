@@ -48,7 +48,7 @@ export class AuthService {
     if (!user) throw CustomError.badRequest('Email not exist');
 
     // Verificamos si matchean las passwords, la password que recibo de mi Dto con la password que tengo hasheada en mi modelo
-    const isMatching = bcryptAdapter.compare( loginUserDto.password, user.password );
+    const isMatching = bcryptAdapter.compare(loginUserDto.password ?? '', user.password ?? ''); // ( loginUserDto.password, user.password )
     if ( !isMatching ) throw CustomError.badRequest('Password is not valid');
 
     // Quito el password asi no se muestra aunque este hasheada, y envio el userEntity
