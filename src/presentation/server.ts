@@ -16,6 +16,7 @@ interface Options {
 
 const GOOGLEOAUTH_CLIENT_ID = envs.GOOGLEOAUTH_CLIENT_ID;
 const GOOGLEOAUTH_CLIENT_SECRET = envs.GOOGLEOAUTH_CLIENT_SECRET;
+const SESSION_SECRETKEY = envs.SESSION_SECRETKEY;
 
 export class Server {
 
@@ -47,7 +48,7 @@ export class Server {
     }));
 
     this.app.use(session({
-      secret            : 'your-secret-key',
+      secret            : SESSION_SECRETKEY,
       resave            : false,
       saveUninitialized : true,
     }));
