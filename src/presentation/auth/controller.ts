@@ -36,11 +36,11 @@ export class AuthController {
     this.authService.loginUser(req.body)
       .then(user => {
         res.cookie('session', user.token, {
-          httpOnly: false,
-          secure: true,
-          sameSite: 'none',
-          maxAge: 3600000,
-          // maxAge: 30000,
+          httpOnly : false,
+          secure   : true,
+          sameSite : 'none',
+          maxAge   : 3600000,
+          // maxAge   : 30000,
         });
         res.json(user);
       })

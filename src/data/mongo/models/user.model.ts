@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+  googleId: {
+    type: String,
+  },
+
   name: {
     type: String,
-    required: [ true, 'Name is required' ],
+    // required: [ true, 'Name is required' ],
   },
 
   email: {
@@ -19,7 +23,7 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type     : String,
-    required : [ true, 'Password is required' ],
+    // required : true,
   },
 
   image: {

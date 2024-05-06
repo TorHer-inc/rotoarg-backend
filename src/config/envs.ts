@@ -14,5 +14,10 @@ export const envs = {
   MAILER_EMAIL: get('MAILER_EMAIL').required().asString(),
   MAILER_SECRET_KEY: get('MAILER_SECRET_KEY').required().asString(),
 
+  GOOGLEOAUTH_CLIENT_ID: get('GOOGLEOAUTH_CLIENT_ID').required().asString(),
+  GOOGLEOAUTH_CLIENT_SECRET: get('GOOGLEOAUTH_CLIENT_SECRET').required().asString(),
+  
+  SESSION_SECRETKEY: get('SESSION_SECRETKEY').required().asString(),
+
   WEBSERVICE_URL: get('WEBSERVICE_URL').required().asString(),
 }
