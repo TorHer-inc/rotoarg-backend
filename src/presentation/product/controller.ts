@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CustomError, CreateProductDto, UpdateProductDto } from "../../domain";
+import { CustomError, CreateProductDto, UpdateProductDto, PaginationDto } from "../../domain";
 import { buildPDF } from "./utils/pdfkit";
 import { ProductService } from "../services";
 
@@ -26,8 +26,18 @@ export class ProductsController {
       .catch( error => this.handleError( error, res ) ); 
   };
 
-  getProducts = ( req: Request, res: Response ) => {
-    this.productService.getProducts()
+  getAllProducts = ( req: Request, res: Response ) => {
+    this.productService.getAllProducts()
+      .then( products => res.json( products ) )
+      .catch( error => this.handleError( error, res ) ); 
+  };
+
+  getPaginatedProducts  = async ( req: Request, res: Response ) => {
+    const { page = 1, limit = 5 } = req.query;
+    const [ error, paginationDto ] = PaginationDto.create( +page, +limit );
+    if ( error ) return res.status(400).json({ error });
+
+    this.productService.getPaginatedProducts( paginationDto! )
       .then( products => res.json( products ) )
       .catch( error => this.handleError( error, res ) ); 
   };
@@ -68,7 +78,7 @@ export class ProductsController {
   generatePdf = async (req: Request, res: Response) => {
     try {
       // Obtener los productos del servidor
-      const products = await this.productService.getProducts();
+      const products = await this.productService.getAllProducts();
 
       // Establecer Headers
       const stream = res.writeHead(200, {

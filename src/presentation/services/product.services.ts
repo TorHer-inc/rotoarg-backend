@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ProductModel } from "../../data";
-import { CreateProductDto, UpdateProductDto, CustomError } from "../../domain";
+import { CreateProductDto, UpdateProductDto, CustomError, PaginationDto } from "../../domain";
 
 export class ProductService {
   constructor(
@@ -36,12 +36,50 @@ export class ProductService {
     }
   }
 
-  async getProducts() {
+  async getAllProducts() {
     try {
       const products = await ProductModel.find()
 
       return {
         products
+      }
+    } catch (error) {
+      throw CustomError.internalServer('Internal Server Error');
+    }
+  }
+
+  async getPaginatedProducts ( paginationDto: PaginationDto ) {
+    const { page, limit } = paginationDto;
+
+    try {
+      const [ total, products ] = await Promise.all( [
+        ProductModel.countDocuments(),
+        ProductModel.find()
+          .skip( ( page - 1 ) * limit )
+          .limit( limit )
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      if (page > totalPages) {
+        throw CustomError.badRequest('La página solicitada no existe');
+      }
+
+      return {
+        page       : page,
+        limit      : limit,
+        total      : total,
+        totalPages : totalPages,
+        next       : (total > page * limit) ? `/products/paginated?page=${page + 1}&limit=${limit}` : null,
+        prev       : (page - 1 > 0) ? `/products/paginated?page=${ (page - 1) }&limit=${ limit }`   : null,
+        products   : products.map( product => ({
+          id       : product.id,
+          name     : product.name,
+          capacity : product.capacity,
+          height   : product.height,
+          diameter : product.diameter,
+          price    : product.price,
+        }))
       }
     } catch (error) {
       throw CustomError.internalServer('Internal Server Error');
