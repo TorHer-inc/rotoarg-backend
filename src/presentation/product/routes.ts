@@ -12,7 +12,8 @@ export class ProductsRoutes {
 
     router.post('/', [AuthMiddleware.validateJWT], controller.createProduct);
     
-    router.get('/', controller.getProducts);
+    router.get('/all', controller.getAllProducts);
+    router.get('/paginated', controller.getPaginatedProducts);
     router.get('/:id', controller.getProductById);
     router.get('/last-updated', controller.getLastUpdated);
     router.get("/lista-productos-pdf", controller.generatePdf );
